@@ -9,6 +9,7 @@
 #   ems.edgebot.vip     储能 EMS          127.0.0.1:8095
 #   vision.edgebot.vip  ai-vision        127.0.0.1:8090，视频播放路径转给 ZLMediaKit 127.0.0.1:80
 #   medlens.edgebot.vip MedLens          127.0.0.1:8010，/cpp/* → C++ 后端 127.0.0.1:8081
+#   gvtest.edgebot.vip  ai-gvtest        127.0.0.1:8097
 #   http://IP           ZLM 播放路径（直连 IP:8090 的页面用），其他显示导航页
 #
 #   docker compose -f docker-compose.yml -f docker-compose.local.yml up -d   （或 ./ctl.sh start）
@@ -51,6 +52,7 @@
 	import status vision 127.0.0.1:8090 /api/system
 	import status medlens 127.0.0.1:8010 /api/health
 	import status ems 127.0.0.1:8095 /api/health
+	import status gvtest 127.0.0.1:8097 /api/health
 	handle_errors 502 503 504 {
 		@status path /status/*
 		respond @status "down" 503
@@ -117,6 +119,11 @@ medlens.edgebot.vip {
 	handle {
 		reverse_proxy 127.0.0.1:8010
 	}
+}
+
+gvtest.edgebot.vip {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8097
 }
 
 # 直接用 IP 访问：http://IP:8090 打开的 ai-vision 页面从这里（VPS 80 端口）拉视频，其他显示导航页
