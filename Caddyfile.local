@@ -18,6 +18,10 @@
 	https_port 8843
 	# 自动跳转会带上 :8843（外面看到的是 443），改成下面手写的跳转
 	auto_https disable_redirects
+	# 不开 HTTP/3：它走 UDP 8843，frp 没有转发，浏览器会先试一次再回退
+	servers {
+		protocols h1 h2
+	}
 }
 
 (status) {
