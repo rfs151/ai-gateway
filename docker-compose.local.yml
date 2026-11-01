@@ -1,0 +1,5 @@
+# 本机运行统一入口（见 Caddyfile.local，监听 8880/8843），覆盖服务器用的 Caddyfile
+services:
+  caddy:
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
