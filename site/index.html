@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在线项目演示</title>
+<meta name="description" content="四个可在浏览器中直接运行的项目：Qt WebAssembly 网络拓扑编辑器、PowerGrid SCADA、ai-vision 智能视频分析、MedLens 医疗影像 AI 检测">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231e6fd9'/%3E%3Cpath d='M8 22l6-12 4 8 3-5 3 9' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f6f7f9; --surface: #fff; --text: #1f2430; --muted: #5b6474; --line: #e3e6eb;
+  --accent: #1e6fd9; --accent-soft: #e8f1fc; --ok: #2ea043; --alarm: #d93025; --idle: #a3aab5;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151b; --surface: #1a1e26; --text: #e6e9ee; --muted: #9aa3b2; --line: #2a303b;
+    --accent: #5b9cf0; --accent-soft: #1d2b40; --ok: #3fb950; --alarm: #f2685c; --idle: #5b6474;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+header { padding: 64px 0 40px; background: var(--surface); border-bottom: 1px solid var(--line); }
+h1 { font-size: 32px; margin: 0 0 8px; letter-spacing: .5px; }
+.lead { font-size: 17px; color: var(--muted); margin: 0; max-width: 680px; }
+
+main { padding: 40px 0 56px; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.card {
+  display: flex; flex-direction: column; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.card:hover { border-color: var(--accent); box-shadow: 0 4px 18px rgb(30 111 217 / .08); }
+.icon {
+  width: 44px; height: 44px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; margin-bottom: 16px;
+}
+.icon svg { width: 24px; height: 24px; }
+.card h2 { font-size: 19px; margin: 0 0 4px; line-height: 1.4; }
+.sub { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+.card p.desc { margin: 0 0 16px; font-size: 15px; flex: 1; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 20px; padding: 0; list-style: none; }
+.tags li { background: var(--accent-soft); color: var(--accent); padding: 1px 9px; border-radius: 999px; font-size: 13px; }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.btn {
+  display: inline-block; padding: 8px 18px; border-radius: 8px; font-weight: 600;
+  background: var(--accent); color: #fff; border: 1px solid var(--accent);
+}
+.btn:hover { filter: brightness(1.06); }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--idle); }
+.status[data-s="ok"] .dot { background: var(--ok); box-shadow: 0 0 0 3px rgb(46 160 67 / .18); }
+.status[data-s="down"] .dot { background: var(--alarm); }
+
+footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+@media (max-width: 620px) {
+  .grid { grid-template-columns: 1fr; }
+  header { padding: 40px 0 28px; }
+  h1 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>在线项目演示</h1>
+    <p class="lead">四个可以在浏览器里直接运行的项目，覆盖 C++/Qt 图形软件、电力监控系统、AI 视频分析和医疗影像 AI 检测。</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="18" r="2.2"/>
+          <path d="M10.8 6.9 6.2 16M13.2 6.9l4.6 9.1M7.2 18h9.6"/>
+        </svg>
+      </div>
+      <h2>网络拓扑编辑器</h2>
+      <p class="sub">Qt 6 作品集 · WebAssembly</p>
+      <p class="desc">节点拖拽、连线、框选、撤销重做，告警实时闪烁，鸟瞰图导航；可一键生成 20000 个节点做压力测试。桌面版和浏览器版是同一套代码。</p>
+      <ul class="tags"><li>C++17</li><li>Qt Graphics View</li><li>WebAssembly</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://qt.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="qt"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2 5 13h6l-1 9 8-11h-6l1-9z"/>
+        </svg>
+      </div>
+      <h2>PowerGrid SCADA</h2>
+      <p class="sub">电力监控系统 · 110kV 变电站仿真</p>
+      <p class="desc">IEC 60870-5-104 规约接入，走通"厂站 → 前置 → SCADA → 人机界面"全链路：一次接线图、告警与 SOE、遥控与五防、事故追忆、负荷预测。</p>
+      <ul class="tags"><li>Python</li><li>IEC 104</li><li>TimescaleDB</li><li>Vue</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://scada.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="scada"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/><rect x="6.5" y="9" width="4" height="5" rx=".5"/>
+        </svg>
+      </div>
+      <h2>ai-vision 智能视频分析</h2>
+      <p class="sub">实时视频 AI 告警平台</p>
+      <p class="desc">接入摄像头和直播流，检测人和车辆并跟踪，按区域入侵、越线、逗留、人数超限告警，保存截图和前后 10 秒录像，WebRTC 低延迟播放。</p>
+      <ul class="tags"><li>YOLO11</li><li>OpenVINO</li><li>ZLMediaKit</li><li>WebRTC</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://vision.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="vision"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"/>
+        </svg>
+      </div>
+      <h2>MedLens 医疗影像 AI 检测</h2>
+      <p class="sub">X 光 · 血细胞 · 脑 MRI · 口腔全景片 · 结肠镜</p>
+      <p class="desc">5 类医疗影像各用一个公开预训练模型，内置示例图片和视频，也可上传本地文件或 DICOM。Python 和 C++ 双后端可一键切换对比延迟。仅供技术演示，不用于临床诊断。</p>
+      <ul class="tags"><li>YOLO11</li><li>ONNX Runtime</li><li>C++ Drogon</li><li>DICOM</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://medlens.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="medlens"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">edgebot.vip · 演示环境，数据为仿真或测试素材</div>
+</footer>
+
+<script>
+// 在线状态：同域名的 /status/<项目>，网关转发到各项目的健康检查，只返回 ok / down
+const LABEL = { ok: '运行中', down: '暂不可用' }
+async function check(el) {
+  let s = 'down'
+  try {
+    const r = await fetch('/status/' + el.dataset.key, { cache: 'no-store', signal: AbortSignal.timeout(6000) })
+    if (r.ok) s = 'ok'
+  } catch (e) {}
+  el.dataset.s = s
+  el.lastElementChild.textContent = LABEL[s]
+}
+const all = () => document.querySelectorAll('.status').forEach(check)
+all()
+setInterval(() => { if (!document.hidden) all() }, 30000)
+</script>
+</body>
+</html>

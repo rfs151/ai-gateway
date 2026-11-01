@@ -1,0 +1,99 @@
+# edgebot.vip 统一入口：80/443 由这里负责，按子域名转发到各项目。
+# 证书由 Caddy 自动申请和续期（Let's Encrypt），http 自动跳转 https。
+#
+#   edgebot.vip         导航页（/srv）+ /status/* 在线状态
+#   qt.edgebot.vip      Qt 作品集        127.0.0.1:8080
+#   scada.edgebot.vip   PowerGrid SCADA  127.0.0.1:8088
+#   vision.edgebot.vip  ai-vision        127.0.0.1:8090，视频播放路径转给 ZLMediaKit 127.0.0.1:8081
+#   medlens.edgebot.vip MedLens          127.0.0.1:8010（Python 服务，页面 + API + WebSocket）
+#   http://IP          ZLM 播放路径（直连 IP:8090 的页面用），其他跳到导航页
+
+# 在线状态：只返回 ok / down，不把各项目健康检查的详细内容暴露出去
+# 用法：import status <名字> <上游> <健康检查路径>
+(status) {
+	handle /status/{args[0]} {
+		header Cache-Control no-store
+		rewrite * {args[2]}
+		reverse_proxy {args[1]} {
+			transport http {
+				dial_timeout 2s
+				response_header_timeout 3s
+			}
+			@ok status 2xx
+			handle_response @ok {
+				respond "ok" 200
+			}
+			handle_response {
+				respond "down" 503
+			}
+		}
+	}
+}
+
+edgebot.vip {
+	encode zstd gzip
+	import status qt 127.0.0.1:8080 /healthz
+	import status scada 127.0.0.1:8088 /api/health
+	import status vision 127.0.0.1:8090 /api/system
+	import status medlens 127.0.0.1:8010 /api/health
+	handle_errors 502 503 504 {
+		@status path /status/*
+		respond @status "down" 503
+	}
+	handle {
+		root * /srv
+		file_server
+	}
+}
+
+www.edgebot.vip {
+	redir https://edgebot.vip{uri} permanent
+}
+
+qt.edgebot.vip {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8080
+}
+
+scada.edgebot.vip {
+	# SCADA 自带的 Caddy 已经压缩、加安全响应头，这里只转发（含 WebSocket /ws）
+	reverse_proxy 127.0.0.1:8088
+}
+
+# ZLMediaKit 只开放浏览器播放用到的路径：WebRTC 信令、播放器脚本、HTTP-FLV/fMP4、HLS。
+# 管理接口 /index/api/*（除 webrtc）不对外。
+(zlm) {
+	@zlm path_regexp ^(/index/api/webrtc|/ZLMRTCClient\.js|/[^/]+/[^/]+\.live\.(mp4|flv)|/[^/]+/[^/]+/.*\.(m3u8|ts))$
+	handle @zlm {
+		reverse_proxy 127.0.0.1:8081 {
+			flush_interval -1 # 直播流边收边发，不缓冲
+		}
+	}
+}
+
+vision.edgebot.vip {
+	import zlm
+	# 页面、API、WebSocket /ws、告警截图和录像 /media（ai-vision 自己做 gzip）
+	handle {
+		reverse_proxy 127.0.0.1:8090
+	}
+}
+
+medlens.edgebot.vip {
+	encode zstd gzip
+	# C++ 后端（https 页面切换后端时用）：/cpp/api/... -> 127.0.0.1:8091/api/...
+	handle_path /cpp/* {
+		reverse_proxy 127.0.0.1:8091
+	}
+	handle {
+		reverse_proxy 127.0.0.1:8010
+	}
+}
+
+# 直接用 IP 访问：http://IP:8090 打开的 ai-vision 页面从这里（80 端口）拉视频，其他跳到导航页
+http:// {
+	import zlm
+	handle {
+		redir https://edgebot.vip{uri}
+	}
+}

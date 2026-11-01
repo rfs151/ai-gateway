@@ -1,0 +1,25 @@
+# 统一入口网关：Caddy 占用 80/443，按子域名转发到各项目，根域名是导航页。
+#   docker compose up -d
+#   docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile   # 改了 Caddyfile 后
+# 导航页（site/）改了直接生效，不用重启。
+#
+# network_mode host：直接访问 127.0.0.1 上各项目的端口，不用跨 Docker 网络。
+services:
+  caddy:
+    image: ${CADDY_IMAGE:-caddy:2.9-alpine}
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv:ro
+      - caddy-data:/data        # 证书，删了会重新申请（Let's Encrypt 有频率限制）
+      - caddy-config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  caddy-data:
+  caddy-config:
