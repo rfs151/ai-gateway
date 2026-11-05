@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>在线项目演示</title>
-<meta name="description" content="四个可在浏览器中直接运行的项目：Qt WebAssembly 网络拓扑编辑器、PowerGrid SCADA、ai-vision 智能视频分析、MedLens 医疗影像 AI 检测">
+<meta name="description" content="六个可在浏览器中直接运行的项目：Qt WebAssembly 网络拓扑监控上位机、PowerGrid SCADA、储能 EMS 边缘网关、ai-vision 智能视频分析、MedLens 医疗影像 AI 检测、GVTest 物联网自动化测试平台">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231e6fd9'/%3E%3Cpath d='M8 22l6-12 4 8 3-5 3 9' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root {
@@ -61,6 +61,41 @@ main { padding: 40px 0 56px; }
 
 footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
 
+/* 能力矩阵：行是能力，列是项目，格子链接到代码或文档 */
+.matrix { margin-bottom: 40px; }
+.matrix h2 { font-size: 22px; margin: 0 0 4px; }
+.hint { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+.legend { display: inline-flex; align-items: center; gap: 6px; margin-left: 10px; white-space: nowrap; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px dashed var(--muted); margin-left: 6px; }
+.legend i.core { background: var(--accent-soft); border: 1px solid var(--accent); }
+.mx-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+#mx { border-collapse: collapse; width: 100%; min-width: 900px; font-size: 13px; }
+#mx th, #mx td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+#mx thead th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+#mx tbody tr:last-child > * { border-bottom: 0; }
+#mx th.skill { position: sticky; left: 0; background: var(--surface); white-space: nowrap; }
+#mx th.skill button { font: inherit; font-weight: 600; color: var(--text); background: none; border: 0; padding: 2px 0; cursor: pointer; text-align: left; }
+#mx th.skill button:hover, #mx tr.on th.skill button { color: var(--accent); }
+#mx tr.on > * { background: var(--accent-soft); }
+#mx td a { display: block; padding: 3px 8px; border-radius: 6px; line-height: 1.45; border: 1px dashed var(--line); color: var(--muted); }
+#mx td a.core { background: var(--accent-soft); border: 1px solid transparent; color: var(--accent); font-weight: 600; }
+#mx tr.on td a.core { border-color: var(--accent); }
+#mx td a:hover { border-color: var(--accent); color: var(--accent); }
+.card { transition: border-color .15s, box-shadow .15s, opacity .2s; }
+.card.dim { opacity: .35; }
+.card.hit { border-color: var(--accent); }
+
+@media (max-width: 720px) {
+  #mx { min-width: 0; }
+  #mx thead { display: none; }
+  #mx tr { display: block; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  #mx tbody tr:last-child { border-bottom: 0; }
+  #mx th.skill, #mx td { display: block; position: static; border: 0; padding: 2px 0; background: none; }
+  #mx th.skill { margin-bottom: 4px; }
+  #mx td:empty { display: none; }
+  #mx td a::before { content: attr(data-p) "："; color: var(--text); font-weight: 400; }
+}
+
 @media (max-width: 620px) {
   .grid { grid-template-columns: 1fr; }
   header { padding: 40px 0 28px; }
@@ -72,12 +107,51 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
 <header>
   <div class="wrap">
     <h1>在线项目演示</h1>
-    <p class="lead">四个可以在浏览器里直接运行的项目，覆盖 C++/Qt 图形软件、电力监控系统、AI 视频分析和医疗影像 AI 检测。</p>
+    <p class="lead">六个可以在浏览器里直接运行的项目，覆盖 C++/Qt 上位机、电力监控系统、储能能量管理、AI 视频分析、医疗影像 AI 检测和物联网自动化测试。</p>
   </div>
 </header>
 
 <main class="wrap">
+  <section class="matrix" aria-labelledby="mx-title">
+    <h2 id="mx-title">能力矩阵</h2>
+    <p class="hint">点击左侧的能力，下方只突出相关项目；格子里的文字链接到对应的代码或文档。
+      <span class="legend"><i class="core"></i>重点体现<i></i>涉及</span></p>
+    <div class="mx-scroll"><table id="mx"></table></div>
+  </section>
+
   <div class="grid">
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/><rect x="6.5" y="9" width="4" height="5" rx=".5"/>
+        </svg>
+      </div>
+      <h2>ai-vision 智能视频分析</h2>
+      <p class="sub">实时视频 AI 告警平台</p>
+      <p class="desc">接入摄像头和直播流，检测人和车辆并跟踪，按区域入侵、越线、逗留、人数超限告警，保存截图和前后 10 秒录像，WebRTC 低延迟播放。</p>
+      <ul class="tags"><li>YOLO11</li><li>OpenVINO</li><li>ZLMediaKit</li><li>WebRTC</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://vision.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="vision"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"/>
+        </svg>
+      </div>
+      <h2>MedLens 医疗影像 AI 检测</h2>
+      <p class="sub">X 光 · 血细胞 · 脑 MRI · 口腔全景片 · 结肠镜</p>
+      <p class="desc">5 类医疗影像各用一个公开预训练模型，内置示例图片和视频，也可上传本地文件或 DICOM。Python 和 C++ 双后端可一键切换对比延迟。仅供技术演示，不用于临床诊断。</p>
+      <ul class="tags"><li>YOLO11</li><li>ONNX Runtime</li><li>C++ Drogon</li><li>DICOM</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://medlens.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="medlens"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
     <article class="card">
       <div class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
@@ -85,13 +159,45 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
           <path d="M10.8 6.9 6.2 16M13.2 6.9l4.6 9.1M7.2 18h9.6"/>
         </svg>
       </div>
-      <h2>网络拓扑编辑器</h2>
-      <p class="sub">Qt 6 作品集 · WebAssembly</p>
-      <p class="desc">节点拖拽、连线、框选、撤销重做，告警实时闪烁，鸟瞰图导航；可一键生成 20000 个节点做压力测试。桌面版和浏览器版是同一套代码。</p>
-      <ul class="tags"><li>C++17</li><li>Qt Graphics View</li><li>WebAssembly</li></ul>
+      <h2>网络拓扑监控上位机</h2>
+      <p class="sub">Qt 6 上位机作品集 · WebAssembly</p>
+      <p class="desc">拓扑图可编辑、可撤销，2 万节点压测流畅。设备数据经自定义帧协议或 Modbus RTU / TCP 在独立线程收发，处理粘包、CRC 错误、断线重连和超时重发，可在页面上注入故障观察，寄存器原始值实时可查。自绘实时曲线和仪表盘，SQLite 历史回放与 CSV 导出。桌面版另支持串口 / TCP，和浏览器版是同一套代码。</p>
+      <ul class="tags"><li>C++17</li><li>Qt Graphics View</li><li>QThread</li><li>Modbus RTU / TCP</li><li>串口 / TCP</li><li>SQLite</li><li>WebAssembly</li></ul>
       <div class="foot">
         <a class="btn" href="https://qt.edgebot.vip/">进入 →</a>
         <span class="status" data-key="qt"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10.5v3M11.5 9.5 9 12.5h4l-2.5 3"/>
+        </svg>
+      </div>
+      <h2>储能 EMS 边缘网关</h2>
+      <p class="sub">1MW/2MWh 储能站仿真 · 云边协同</p>
+      <p class="desc">三家虚构厂商的 PCS/BMS 经 Modbus TCP 接入，C 语言边缘网关完成采集、功率控制和本地存储，MQTT 上云。可在页面上下发 mFRR 调度、制造频率扰动、注入故障，实时看 FCR / LFSM-O 响应。</p>
+      <ul class="tags"><li>C99</li><li>Modbus TCP</li><li>SQLite WAL</li><li>MQTT</li><li>Vue</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://ems.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="ems"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/>
+        </svg>
+      </div>
+      <h2>GVTest 自动化测试平台 · 架构全景</h2>
+      <p class="sub">交互式架构图 · 8 个可回放场景</p>
+      <p class="desc">测试平台和被测的能源交易 / 储能调度系统共 22 个模块，HTTP、SQL、Redis、MQTT、SSH 等 7 种连接分色显示。可逐步回放请求，数据包沿连线流动，同时查看 JSON、MQTT 报文、SQL 和 pytest 输出。页面只含架构和模拟数据。</p>
+      <ul class="tags"><li>FastAPI</li><li>pytest</li><li>Playwright</li><li>Dramatiq</li><li>MQTT</li><li>Vue 3</li></ul>
+      <div class="foot">
+        <a class="btn" href="https://gvtest.edgebot.vip/">进入 →</a>
+        <span class="status" data-key="gvtest"><i class="dot"></i><span>检测中</span></span>
       </div>
     </article>
 
@@ -110,42 +216,11 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
         <span class="status" data-key="scada"><i class="dot"></i><span>检测中</span></span>
       </div>
     </article>
-
-    <article class="card">
-      <div class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/><rect x="6.5" y="9" width="4" height="5" rx=".5"/>
-        </svg>
-      </div>
-      <h2>ai-vision 智能视频分析</h2>
-      <p class="sub">实时视频 AI 告警平台</p>
-      <p class="desc">接入摄像头和直播流，检测人和车辆并跟踪，按区域入侵、越线、逗留、人数超限告警，保存截图和前后 10 秒录像，WebRTC 低延迟播放。</p>
-      <ul class="tags"><li>YOLO11</li><li>OpenVINO</li><li>ZLMediaKit</li><li>WebRTC</li></ul>
-      <div class="foot">
-        <a class="btn" href="https://vision.edgebot.vip/">进入 →</a>
-        <span class="status" data-key="vision"><i class="dot"></i><span>检测中</span></span>
-      </div>
-    </article>
-    <article class="card">
-      <div class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"/>
-        </svg>
-      </div>
-      <h2>MedLens 医疗影像 AI 检测</h2>
-      <p class="sub">X 光 · 血细胞 · 脑 MRI · 口腔全景片 · 结肠镜</p>
-      <p class="desc">5 类医疗影像各用一个公开预训练模型，内置示例图片和视频，也可上传本地文件或 DICOM。Python 和 C++ 双后端可一键切换对比延迟。仅供技术演示，不用于临床诊断。</p>
-      <ul class="tags"><li>YOLO11</li><li>ONNX Runtime</li><li>C++ Drogon</li><li>DICOM</li></ul>
-      <div class="foot">
-        <a class="btn" href="https://medlens.edgebot.vip/">进入 →</a>
-        <span class="status" data-key="medlens"><i class="dot"></i><span>检测中</span></span>
-      </div>
-    </article>
   </div>
 </main>
 
 <footer>
-  <div class="wrap">edgebot.vip · 演示环境，数据为仿真或测试素材</div>
+  <div class="wrap">edgebot.vip · 演示环境，数据为仿真或测试素材 · 源码：<a href="https://github.com/rfs151">github.com/rfs151</a></div>
 </footer>
 
 <script>
@@ -161,13 +236,98 @@ async function check(el) {
   el.lastElementChild.textContent = LABEL[s]
 }
 // 用 IP 访问时（国内 VPS 的 frp 转发，没有域名）：「进入」链接改成 http://<IP>:<端口>/
-const PORT = { qt: 8080, scada: 8088, ems: 8095, vision: 8090, medlens: 8010 }
+const PORT = { qt: 8080, scada: 8088, ems: 8095, vision: 8090, medlens: 8010, gvtest: 8097 }
 if (/^\d+\.\d+\.\d+\.\d+$/.test(location.hostname)) {
   document.querySelectorAll('.status').forEach(el => {
     const a = el.parentElement.querySelector('a.btn')
     if (a && PORT[el.dataset.key]) a.href = `http://${location.hostname}:${PORT[el.dataset.key]}/`
   })
 }
+// 能力矩阵。每格：[级别（1 重点 / 0 涉及）, 文字, 链接（相对 GitHub 用户主页或完整 URL）]
+const GH = 'https://github.com/rfs151/'
+const COLS = [['vision', 'ai-vision'], ['medlens', 'MedLens'], ['qt', 'Qt 上位机'], ['ems', '储能 EMS'], ['gvtest', 'GVTest'], ['scada', 'SCADA']]
+const GV = 'https://gvtest.edgebot.vip/'    // GVTest 只公开架构演示页，格子指向演示页
+const SKILLS = [
+  ['C / C++ 系统编程', {
+    medlens: [1, 'C++17 Drogon 推理服务', 'ai-medlens/tree/main/cpp_backend/src'],
+    qt: [1, 'C++17 · Qt 6 · 通信 / 写库独立线程', 'ai-qt/tree/main/topology-editor/src'],
+    ems: [1, 'C99 边缘网关，采集 / 控制 / 存储', 'ai-ems/tree/main/ems-core/src'] }],
+  ['图形渲染与 WebAssembly', {
+    medlens: [1, 'GPU 光线投射体渲染，桌面 OpenGL + 网页 WebGL2', 'ai-medlens/tree/main/gl_viewer/src'],
+    qt: [1, 'Graphics View 2 万节点 · QPainter 曲线 / 仪表 · Qt → WASM', 'ai-qt/blob/main/docs/DESIGN.md'] }],
+  ['工业协议与物联网', {
+    vision: [0, 'RTSP / WebRTC / FLV 流媒体', 'ai-vision#3-zlmediakit-配置修改'],
+    qt: [1, 'Modbus RTU / TCP 主从站 · 自定义帧协议 · 粘包 / CRC / 重连', 'ai-qt/blob/main/topology-editor/src/comm/Modbus.cpp'],
+    ems: [1, 'Modbus TCP 多厂商接入 · MQTT 上云', 'ai-ems/blob/main/ems-core/src/acq/acq.c'],
+    gvtest: [0, 'MQTT 设备模拟', GV],
+    scada: [1, 'IEC 60870-5-104 规约栈（主站 + 子站）', 'ai-scada/tree/main/packages/scadalib/scadalib/iec104'] }],
+  ['数据库与存储', {
+    vision: [0, 'SQLAlchemy · Alembic 迁移', 'ai-vision/blob/main/api/db.py'],
+    qt: [0, 'SQLite WAL · 写库线程 · 秒级聚合回放', 'ai-qt/blob/main/topology-editor/src/history/HistoryDb.cpp'],
+    ems: [1, 'SQLite WAL · 发件箱断网续传', 'ai-ems/blob/main/ems-core/src/storage/storage.c'],
+    gvtest: [0, 'MySQL · InfluxDB', GV],
+    scada: [1, 'TimescaleDB 压缩 / 连续聚合 · Redis Stream 批量 COPY', 'ai-scada/blob/main/services/api/app/db/migrations/001_init.sql'] }],
+  ['后端与全栈 Web', {
+    vision: [1, 'FastAPI · WebSocket · Vue，进程管理', 'ai-vision/tree/main/api'],
+    medlens: [0, 'Python / C++ 双后端同一套接口', 'ai-medlens/tree/main/backend/app'],
+    ems: [0, 'FastAPI 云端 · Vue 3 + TS', 'ai-ems/blob/main/cloud/app.py'],
+    gvtest: [0, 'FastAPI · Dramatiq 任务队列', GV],
+    scada: [1, 'FastAPI + Vue · JWT 认证 · 审计日志', 'ai-scada/tree/main/services/api/app'] }],
+  ['AI 与计算机视觉', {
+    vision: [1, 'YOLO11 · ByteTrack 跟踪 · OpenVINO', 'ai-vision/tree/main/worker'],
+    medlens: [1, '5 类医疗影像模型 · DICOM 窗宽窗位', 'ai-medlens/tree/main/backend/app'],
+    scada: [0, '负荷预测 · 大模型事故简报', 'ai-scada/tree/main/services/api/app/forecast'] }],
+  ['控制算法与行业业务', {
+    vision: [0, '区域入侵 / 越线 / 逗留规则', 'ai-vision/blob/main/worker/rules.py'],
+    qt: [0, '阈值回差告警 · 参数下发', 'ai-qt/blob/main/topology-editor/src/monitor/DeviceMonitor.cpp'],
+    ems: [1, 'FCR / mFRR / LFSM-O · 规则引擎', 'ai-ems/blob/main/ems-core/src/control/algo.c'],
+    scada: [1, '五防 · 遥控选择-返校-执行 · 事故追忆', 'ai-scada/tree/main/services/api/app/control'] }],
+  ['测试与质量', {
+    vision: [0, 'pytest：规则、跟踪、录像、进程管理', 'ai-vision/tree/main/tests'],
+    medlens: [0, 'pytest（不依赖模型）', 'ai-medlens/tree/main/backend/tests'],
+    qt: [0, 'Qt Test 48 项 · 与 QtSerialBus 互操作', 'ai-qt/tree/main/topology-editor/tests'],
+    ems: [0, '144 项单元测试 · ASan', 'ai-ems/tree/main/ems-core/tests'],
+    gvtest: [1, 'pytest · Playwright · Allure · Jenkins', GV],
+    scada: [1, 'GitHub Actions CI · lib60870 互操作测试', 'ai-scada/blob/main/.github/workflows/ci.yml'] }],
+  ['性能优化与问题定位', {
+    vision: [1, '16 个排查案例 · 推理线程调优', 'ai-vision#6-问题定位记录'],
+    medlens: [0, '双后端延迟 / 吞吐基准', 'ai-medlens/blob/main/scripts/benchmark.py'],
+    qt: [0, 'BSP · LOD · 曲线降采样 20 万点 → 3 千', 'ai-qt/blob/main/docs/DESIGN.md'],
+    ems: [0, '规则查找：二分比线性快 7 倍', 'ai-ems/blob/main/ems-core/src/rules/rule_core.c'] }],
+  ['部署运维与 Shell', {
+    vision: [1, 'systemd · Docker · 云服务器部署', 'ai-vision#8-部署与运维'],
+    qt: [0, '多阶段镜像 · docker save | ssh 部署', 'ai-qt/blob/main/scripts/deploy.sh'],
+    ems: [0, 'Docker Compose · ctl.sh', 'ai-ems/blob/main/ctl.sh'],
+    scada: [0, 'Compose · Caddy · 定时自动复位', 'ai-scada#docker-部署'] }],
+]
+
+const mx = document.getElementById('mx')
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+mx.innerHTML = '<thead><tr><th>能力</th>' + COLS.map(([, n]) => `<th>${n}</th>`).join('') + '</tr></thead><tbody>' +
+  SKILLS.map(([skill, cells], i) => `<tr data-i="${i}"><th class="skill" scope="row"><button type="button">${skill}</button></th>` +
+    COLS.map(([k, n]) => {
+      const c = cells[k]
+      if (!c) return '<td></td>'
+      const href = /^https?:/.test(c[2]) ? c[2] : GH + c[2]
+      return `<td><a class="${c[0] ? 'core' : 'yes'}" data-p="${n}" href="${esc(href)}" target="_blank" rel="noopener">${esc(c[1])}</a></td>`
+    }).join('') + '</tr>').join('') + '</tbody>'
+
+// 点击能力：突出相关项目卡片，再点一次取消
+let picked = -1
+mx.addEventListener('click', e => {
+  const btn = e.target.closest('th.skill button')
+  if (!btn) return
+  const i = +btn.closest('tr').dataset.i
+  picked = picked === i ? -1 : i
+  mx.querySelectorAll('tbody tr').forEach(tr => tr.classList.toggle('on', +tr.dataset.i === picked))
+  document.querySelectorAll('.card').forEach(card => {
+    const key = card.querySelector('.status')?.dataset.key
+    const hit = picked >= 0 && !!SKILLS[picked][1][key]
+    card.classList.toggle('hit', hit)
+    card.classList.toggle('dim', picked >= 0 && !hit)
+  })
+})
+
 const all = () => document.querySelectorAll('.status').forEach(check)
 all()
 setInterval(() => { if (!document.hidden) all() }, 30000)
