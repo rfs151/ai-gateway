@@ -6,6 +6,7 @@
 #   scada.edgebot.vip   PowerGrid SCADA  127.0.0.1:8088
 #   vision.edgebot.vip  ai-vision        127.0.0.1:8090，视频播放路径转给 ZLMediaKit 127.0.0.1:8081
 #   medlens.edgebot.vip MedLens          127.0.0.1:8010（Python 服务，页面 + API + WebSocket）
+#   ems.edgebot.vip     储能 EMS 边缘网关  127.0.0.1:8095（FastAPI，页面 + API + WebSocket）
 #   http://IP          ZLM 播放路径（直连 IP:8090 的页面用），其他跳到导航页
 
 # 在线状态：只返回 ok / down，不把各项目健康检查的详细内容暴露出去
@@ -36,6 +37,7 @@ edgebot.vip {
 	import status scada 127.0.0.1:8088 /api/health
 	import status vision 127.0.0.1:8090 /api/system
 	import status medlens 127.0.0.1:8010 /api/health
+	import status ems 127.0.0.1:8095 /api/health
 	handle_errors 502 503 504 {
 		@status path /status/*
 		respond @status "down" 503
@@ -53,6 +55,11 @@ www.edgebot.vip {
 qt.edgebot.vip {
 	encode zstd gzip
 	reverse_proxy 127.0.0.1:8080
+}
+
+ems.edgebot.vip {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8095
 }
 
 scada.edgebot.vip {
