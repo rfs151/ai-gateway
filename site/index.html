@@ -128,8 +128,8 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
       </div>
       <h2>ai-vision 智能视频分析</h2>
       <p class="sub">实时视频 AI 告警平台</p>
-      <p class="desc">接入摄像头和直播流，检测人和车辆并跟踪，按区域入侵、越线、逗留、人数超限告警，保存截图和前后 10 秒录像，WebRTC 低延迟播放。</p>
-      <ul class="tags"><li>YOLO11</li><li>OpenVINO</li><li>ZLMediaKit</li><li>WebRTC</li></ul>
+      <p class="desc">接入摄像头和直播流，检测人和车辆并跟踪，按区域入侵、越线、逗留、人数超限告警，保存截图和前后 10 秒录像，WebRTC 低延迟播放。视频实验室里，动态关键帧、ROI 编码、静止画面跳过推理可按路单独开关，并和基准流左右对比画质与 CPU。</p>
+      <ul class="tags"><li>YOLO11</li><li>OpenVINO</li><li>ZLMediaKit</li><li>WebRTC</li><li>x264 ROI</li></ul>
       <div class="foot">
         <a class="btn" href="https://vision.edgebot.vip/">进入 →</a>
         <span class="status" data-key="vision"><i class="dot"></i><span>检测中</span></span>
@@ -144,8 +144,8 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
       </div>
       <h2>MedLens 医疗影像 AI 检测</h2>
       <p class="sub">X 光 · 血细胞 · 脑 MRI · 口腔全景片 · 结肠镜</p>
-      <p class="desc">5 类医疗影像各用一个公开预训练模型，内置示例图片和视频，也可上传本地文件或 DICOM。Python 和 C++ 双后端可一键切换对比延迟。仅供技术演示，不用于临床诊断。</p>
-      <ul class="tags"><li>YOLO11</li><li>ONNX Runtime</li><li>C++ Drogon</li><li>DICOM</li></ul>
+      <p class="desc">5 类医疗影像各用一个公开预训练模型，内置示例图片和视频，也可上传本地文件或 DICOM；血细胞计数可与传统 OpenCV 算法对比。Python 和 C++ 双后端可一键切换对比延迟。脑 MRI 支持 3D 体渲染和三视图：同一套 C++ / OpenGL 代码编译成桌面程序和网页版（WebAssembly）。仅供技术演示，不用于临床诊断。</p>
+      <ul class="tags"><li>YOLO11</li><li>ONNX Runtime</li><li>C++ Drogon</li><li>DICOM</li><li>OpenGL / WebGL2</li><li>WebAssembly</li></ul>
       <div class="foot">
         <a class="btn" href="https://medlens.edgebot.vip/">进入 →</a>
         <span class="status" data-key="medlens"><i class="dot"></i><span>检测中</span></span>
@@ -249,14 +249,14 @@ const COLS = [['vision', 'ai-vision'], ['medlens', 'MedLens'], ['qt', 'Qt 上位
 const GV = 'https://gvtest.edgebot.vip/'    // GVTest 只公开架构演示页，格子指向演示页
 const SKILLS = [
   ['C / C++ 系统编程', {
-    medlens: [1, 'C++17 Drogon 推理服务', 'ai-medlens/tree/main/cpp_backend/src'],
+    medlens: [1, 'C++17 Drogon 推理服务 · OpenGL 体渲染（桌面和网页同一套代码）', 'ai-medlens/tree/main/cpp_backend/src'],
     qt: [1, 'C++17 · Qt 6 · 通信 / 写库独立线程', 'ai-qt/tree/main/topology-editor/src'],
     ems: [1, 'C99 边缘网关，采集 / 控制 / 存储', 'ai-ems/tree/main/ems-core/src'] }],
   ['图形渲染与 WebAssembly', {
-    medlens: [1, 'GPU 光线投射体渲染，桌面 OpenGL + 网页 WebGL2', 'ai-medlens/tree/main/gl_viewer/src'],
+    medlens: [1, 'GPU 光线投射体渲染 + 三视图，桌面 OpenGL + 网页 WebGL2（wasm 62 KB）', 'ai-medlens/tree/main/gl_viewer/src'],
     qt: [1, 'Graphics View 2 万节点 · QPainter 曲线 / 仪表 · Qt → WASM', 'ai-qt/blob/main/docs/DESIGN.md'] }],
   ['工业协议与物联网', {
-    vision: [0, 'RTSP / WebRTC / FLV 流媒体', 'ai-vision#3-zlmediakit-配置修改'],
+    vision: [1, 'RTSP / WebRTC 流媒体 · 进程内 x264：动态关键帧、ROI 编码', 'ai-vision#58-视频编码功能与视频实验室'],
     qt: [1, 'Modbus RTU / TCP 主从站 · 自定义帧协议 · 粘包 / CRC / 重连', 'ai-qt/blob/main/topology-editor/src/comm/Modbus.cpp'],
     ems: [1, 'Modbus TCP 多厂商接入 · MQTT 上云', 'ai-ems/blob/main/ems-core/src/acq/acq.c'],
     gvtest: [0, 'MQTT 设备模拟', GV],
@@ -274,8 +274,8 @@ const SKILLS = [
     gvtest: [0, 'FastAPI · Dramatiq 任务队列', GV],
     scada: [1, 'FastAPI + Vue · JWT 认证 · 审计日志', 'ai-scada/tree/main/services/api/app'] }],
   ['AI 与计算机视觉', {
-    vision: [1, 'YOLO11 · ByteTrack 跟踪 · OpenVINO', 'ai-vision/tree/main/worker'],
-    medlens: [1, '5 类医疗影像模型 · DICOM 窗宽窗位', 'ai-medlens/tree/main/backend/app'],
+    vision: [1, 'YOLO11 · ByteTrack 跟踪 · OpenVINO · 运动矢量跳过静止帧', 'ai-vision/tree/main/worker'],
+    medlens: [1, '5 类医疗影像模型 · 实测选型（息肉检出 1% → 50%）· DICOM 窗宽窗位', 'ai-medlens/tree/main/backend/app'],
     scada: [0, '负荷预测 · 大模型事故简报', 'ai-scada/tree/main/services/api/app/forecast'] }],
   ['控制算法与行业业务', {
     vision: [0, '区域入侵 / 越线 / 逗留规则', 'ai-vision/blob/main/worker/rules.py'],
@@ -283,19 +283,20 @@ const SKILLS = [
     ems: [1, 'FCR / mFRR / LFSM-O · 规则引擎', 'ai-ems/blob/main/ems-core/src/control/algo.c'],
     scada: [1, '五防 · 遥控选择-返校-执行 · 事故追忆', 'ai-scada/tree/main/services/api/app/control'] }],
   ['测试与质量', {
-    vision: [0, 'pytest：规则、跟踪、录像、进程管理', 'ai-vision/tree/main/tests'],
-    medlens: [0, 'pytest（不依赖模型）', 'ai-medlens/tree/main/backend/tests'],
+    vision: [0, 'pytest 56 项：规则、跟踪、编码、录像、进程管理', 'ai-vision/tree/main/tests'],
+    medlens: [0, 'pytest 8 项（不依赖模型文件）', 'ai-medlens/tree/main/backend/tests'],
     qt: [0, 'Qt Test 48 项 · 与 QtSerialBus 互操作', 'ai-qt/tree/main/topology-editor/tests'],
     ems: [0, '144 项单元测试 · ASan', 'ai-ems/tree/main/ems-core/tests'],
     gvtest: [1, 'pytest · Playwright · Allure · Jenkins', GV],
     scada: [1, 'GitHub Actions CI · lib60870 互操作测试', 'ai-scada/blob/main/.github/workflows/ci.yml'] }],
   ['性能优化与问题定位', {
-    vision: [1, '16 个排查案例 · 推理线程调优', 'ai-vision#6-问题定位记录'],
-    medlens: [0, '双后端延迟 / 吞吐基准', 'ai-medlens/blob/main/scripts/benchmark.py'],
+    vision: [1, '16 个排查案例 · 推理线程调优 · 静止画面 CPU 72% → 14%', 'ai-vision#6-问题定位记录'],
+    medlens: [0, '双后端基准：ONNX Runtime 36 ms / OpenCV DNN 105 ms', 'ai-medlens/blob/main/scripts/benchmark.py'],
     qt: [0, 'BSP · LOD · 曲线降采样 20 万点 → 3 千', 'ai-qt/blob/main/docs/DESIGN.md'],
     ems: [0, '规则查找：二分比线性快 7 倍', 'ai-ems/blob/main/ems-core/src/rules/rule_core.c'] }],
   ['部署运维与 Shell', {
     vision: [1, 'systemd · Docker · 云服务器部署', 'ai-vision#8-部署与运维'],
+    medlens: [0, 'Docker Compose · ctl.sh', 'ai-medlens/blob/main/ctl.sh'],
     qt: [0, '多阶段镜像 · docker save | ssh 部署', 'ai-qt/blob/main/scripts/deploy.sh'],
     ems: [0, 'Docker Compose · ctl.sh', 'ai-ems/blob/main/ctl.sh'],
     scada: [0, 'Compose · Caddy · 定时自动复位', 'ai-scada#docker-部署'] }],
