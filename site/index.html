@@ -107,7 +107,7 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
 <header>
   <div class="wrap">
     <h1>在线项目演示</h1>
-    <p class="lead">六个可以在浏览器里直接运行的项目，覆盖 C++/Qt 上位机、电力监控系统、储能能量管理、AI 视频分析、医疗影像 AI 检测和物联网自动化测试。</p>
+    <p class="lead">七个可以在浏览器里直接运行的项目，覆盖 C++/Qt 上位机、工业相机采集、电力监控系统、储能能量管理、AI 视频分析、医疗影像 AI 检测和物联网自动化测试。</p>
   </div>
 </header>
 
@@ -188,6 +188,22 @@ footer { padding: 24px 0 40px; color: var(--muted); font-size: 14px; border-top:
     <article class="card">
       <div class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2.5" y="6" width="19" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.6"/><path d="M8 6l1.5-2.5h5L16 6"/><path d="M18 9h.01"/>
+        </svg>
+      </div>
+      <h2>ai-cam 工业相机采集</h2>
+      <p class="sub">GigE Vision 采集链路 · 故障注入</p>
+      <p class="desc">两台 Aravis 虚拟 GigE 相机接入 C++ 采集引擎：帧池、有界队列、写盘线程，断线后指数退避重连。网页上可以拔网线、设丢包率、让取帧线程或磁盘变慢，丢帧漏斗按网络包、拼帧、SDK 缓冲、帧号、队列、文件六层实时计数，录像自动做 CRC 和帧号校验。</p>
+      <ul class="tags"><li>C++17</li><li>GigE Vision</li><li>Aravis</li><li>GenICam</li><li>FastAPI</li><li>WebSocket</li></ul>
+      <div class="foot">
+        <a class="btn" href="http://47.117.29.74:8098/">进入 →</a>
+        <span class="status" data-key="cam"><i class="dot"></i><span>检测中</span></span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/>
         </svg>
       </div>
@@ -236,7 +252,7 @@ async function check(el) {
   el.lastElementChild.textContent = LABEL[s]
 }
 // 用 IP 访问时（国内 VPS 的 frp 转发，没有域名）：「进入」链接改成 http://<IP>:<端口>/
-const PORT = { qt: 8080, scada: 8088, ems: 8095, vision: 8090, medlens: 8010, gvtest: 8097 }
+const PORT = { qt: 8080, scada: 8088, ems: 8095, vision: 8090, medlens: 8010, gvtest: 8097, cam: 8098 }
 if (/^\d+\.\d+\.\d+\.\d+$/.test(location.hostname)) {
   document.querySelectorAll('.status').forEach(el => {
     const a = el.parentElement.querySelector('a.btn')
@@ -245,10 +261,11 @@ if (/^\d+\.\d+\.\d+\.\d+$/.test(location.hostname)) {
 }
 // 能力矩阵。每格：[级别（1 重点 / 0 涉及）, 文字, 链接（相对 GitHub 用户主页或完整 URL）]
 const GH = 'https://github.com/rfs151/'
-const COLS = [['vision', 'ai-vision'], ['medlens', 'MedLens'], ['qt', 'Qt 上位机'], ['ems', '储能 EMS'], ['gvtest', 'GVTest'], ['scada', 'SCADA']]
+const COLS = [['vision', 'ai-vision'], ['medlens', 'MedLens'], ['qt', 'Qt 上位机'], ['ems', '储能 EMS'], ['cam', 'ai-cam'], ['gvtest', 'GVTest'], ['scada', 'SCADA']]
 const GV = 'https://gvtest.edgebot.vip/'    // GVTest 只公开架构演示页，格子指向演示页
 const SKILLS = [
   ['C / C++ 系统编程', {
+    cam: [1, 'C++17 采集引擎 · 帧池 / 有界队列 / 写盘线程', 'ai-cam/blob/main/src/capd.cpp'],
     medlens: [1, 'C++17 Drogon 推理服务 · OpenGL 体渲染（桌面和网页同一套代码）', 'ai-medlens/tree/main/cpp_backend/src'],
     qt: [1, 'C++17 · Qt 6 · 通信 / 写库独立线程', 'ai-qt/tree/main/topology-editor/src'],
     ems: [1, 'C99 边缘网关，采集 / 控制 / 存储', 'ai-ems/tree/main/ems-core/src'] }],
@@ -256,18 +273,21 @@ const SKILLS = [
     medlens: [1, 'GPU 光线投射体渲染 + 三视图，桌面 OpenGL + 网页 WebGL2（wasm 62 KB）', 'ai-medlens/tree/main/gl_viewer/src'],
     qt: [1, 'Graphics View 2 万节点 · QPainter 曲线 / 仪表 · Qt → WASM', 'ai-qt/blob/main/docs/DESIGN.md'] }],
   ['工业协议与物联网', {
+    cam: [1, 'GigE Vision（GVCP / GVSP）· GenICam · Aravis / 海康 MVS SDK', 'ai-cam/blob/main/src/aravis_capture.cpp'],
     vision: [1, 'RTSP / WebRTC 流媒体 · 进程内 x264：动态关键帧、ROI 编码', 'ai-vision#58-视频编码功能与视频实验室'],
     qt: [1, 'Modbus RTU / TCP 主从站 · 自定义帧协议 · 粘包 / CRC / 重连', 'ai-qt/blob/main/topology-editor/src/comm/Modbus.cpp'],
     ems: [1, 'Modbus TCP 多厂商接入 · MQTT 上云', 'ai-ems/blob/main/ems-core/src/acq/acq.c'],
     gvtest: [0, 'MQTT 设备模拟', GV],
     scada: [1, 'IEC 60870-5-104 规约栈（主站 + 子站）', 'ai-scada/tree/main/packages/scadalib/scadalib/iec104'] }],
   ['数据库与存储', {
+    cam: [0, '录像格式：48 字节帧头 + CRC32 · 512 MiB 滚动', 'ai-cam/blob/main/include/recorder.h'],
     vision: [0, 'SQLAlchemy · Alembic 迁移', 'ai-vision/blob/main/api/db.py'],
     qt: [0, 'SQLite WAL · 写库线程 · 秒级聚合回放', 'ai-qt/blob/main/topology-editor/src/history/HistoryDb.cpp'],
     ems: [1, 'SQLite WAL · 发件箱断网续传', 'ai-ems/blob/main/ems-core/src/storage/storage.c'],
     gvtest: [0, 'MySQL · InfluxDB', GV],
     scada: [1, 'TimescaleDB 压缩 / 连续聚合 · Redis Stream 批量 COPY', 'ai-scada/blob/main/services/api/app/db/migrations/001_init.sql'] }],
   ['后端与全栈 Web', {
+    cam: [0, 'FastAPI · WebSocket 推送 JPEG 预览 · 控制权', 'ai-cam/blob/main/web/api/app.py'],
     vision: [1, 'FastAPI · WebSocket · Vue，进程管理', 'ai-vision/tree/main/api'],
     medlens: [0, 'Python / C++ 双后端同一套接口', 'ai-medlens/tree/main/backend/app'],
     ems: [0, 'FastAPI 云端 · Vue 3 + TS', 'ai-ems/blob/main/cloud/app.py'],
@@ -283,6 +303,7 @@ const SKILLS = [
     ems: [1, 'FCR / mFRR / LFSM-O · 规则引擎', 'ai-ems/blob/main/ems-core/src/control/algo.c'],
     scada: [1, '五防 · 遥控选择-返校-执行 · 事故追忆', 'ai-scada/tree/main/services/api/app/control'] }],
   ['测试与质量', {
+    cam: [0, '录像离线校验：CRC / 帧号绕回 / 帧间隔', 'ai-cam/blob/main/tools/verify_record.py'],
     vision: [0, 'pytest 56 项：规则、跟踪、编码、录像、进程管理', 'ai-vision/tree/main/tests'],
     medlens: [0, 'pytest 8 项（不依赖模型文件）', 'ai-medlens/tree/main/backend/tests'],
     qt: [0, 'Qt Test 48 项 · 与 QtSerialBus 互操作', 'ai-qt/tree/main/topology-editor/tests'],
@@ -290,11 +311,13 @@ const SKILLS = [
     gvtest: [1, 'pytest · Playwright · Allure · Jenkins', GV],
     scada: [1, 'GitHub Actions CI · lib60870 互操作测试', 'ai-scada/blob/main/.github/workflows/ci.yml'] }],
   ['性能优化与问题定位', {
+    cam: [1, '六层丢帧统计 · 丢包 / underrun / 慢盘故障注入', 'ai-cam#网页演示'],
     vision: [1, '16 个排查案例 · 推理线程调优 · 静止画面 CPU 72% → 14%', 'ai-vision#6-问题定位记录'],
     medlens: [0, '双后端基准：ONNX Runtime 36 ms / OpenCV DNN 105 ms', 'ai-medlens/blob/main/scripts/benchmark.py'],
     qt: [0, 'BSP · LOD · 曲线降采样 20 万点 → 3 千', 'ai-qt/blob/main/docs/DESIGN.md'],
     ems: [0, '规则查找：二分比线性快 7 倍', 'ai-ems/blob/main/ems-core/src/rules/rule_core.c'] }],
   ['部署运维与 Shell', {
+    cam: [0, '多阶段镜像 · Compose · ctl.sh', 'ai-cam/blob/main/ctl.sh'],
     vision: [1, 'systemd · Docker · 云服务器部署', 'ai-vision#8-部署与运维'],
     medlens: [0, 'Docker Compose · ctl.sh', 'ai-medlens/blob/main/ctl.sh'],
     qt: [0, '多阶段镜像 · docker save | ssh 部署', 'ai-qt/blob/main/scripts/deploy.sh'],

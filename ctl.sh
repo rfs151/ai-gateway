@@ -21,7 +21,7 @@ case ${1:-status} in
   status)
     "${DC[@]}" ps -a --format 'table {{.Service}}\t{{.Status}}'
     echo "导航页 $URL -> $(curl -s --noproxy '*' -m 5 -o /dev/null -w '%{http_code}' "$URL" || true)"
-    for k in qt scada ems vision medlens; do
+    for k in qt scada ems vision medlens gvtest cam; do
       printf '  %-8s %s\n' "$k" "$(curl -s --noproxy '*' -m 6 "${URL%/}/status/$k" || echo down)"
     done ;;
   logs)    "${DC[@]}" logs -f --tail 100 ;;
